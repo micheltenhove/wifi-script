@@ -1,7 +1,8 @@
 ## Generate the certificate from a On-Prem AD Joined device ##
 ## If you want this wi-fi profile to be non-removable from an end user perspective, ##
-## then also make an Intune Profile with the wifiprofile.xml content that is the same as this one ##
-## Reason that I'm choosing this way to do it, is that I want to be sure the wi-fi profile is created when this script ran, the intune policy will eventually force the wi-fi profile so It can't be deleted anymore ##
+## then also create an Intune Wi-Fi Profile (Windows 8.1 and higher) with the wifiprofile.xml content that is also used in this script##
+## Reason that I'm choosing this way to enroll wi-fi is because I want to be sure the wi-fi profile is created when this script ran. ##
+## The Intune policy will eventually force the wi-fi profile so It can't be deleted by end-users anymore ##
 
 ## Create Folder ##
 New-Item -ItemType directory -Path C:\wifi -Force
@@ -14,5 +15,5 @@ Invoke-WebRequest -Uri "https://intuneresources.blob.core.windows.net/" -OutFile
 Import-PfxCertificate -FilePath C:\wifi\certificate.pfx -Password (ConvertTo-SecureString -String 'CERTPASS' -AsPlainText -Force) -CertStoreLocation Cert:\LocalMachine\My
 netsh wlan add profile filename="C:\wifi\wifiprofile.xml" user=all
 
-## Remove the folder including the content ##
+## Remove the folder including the certificate file and wifiprofile ##
 Remove-Item -Path C:\wifi -Force -Recurse
